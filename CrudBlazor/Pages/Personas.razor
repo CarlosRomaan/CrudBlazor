@@ -1,0 +1,51 @@
+﻿@page "/personas"
+
+@using System.Net.Http
+@using System.Net.Http.Json
+@using CrudBlazor.Data 
+
+@inject HttpClient Http
+
+<h3>Personas</h3>
+
+<div class="row">
+    <div class="col-12 text-right">
+        <a href="personaform">Nuevo</a>
+    </div>
+
+</div>
+
+<table class="table">
+    <tr>
+        <td>Id</td>
+        <td>Nombre</td>
+        <td>Apellido</td>
+        <td>Edad</td>
+    </tr>
+
+    @if (oRespuesta != null && oRespuesta.Data != null)
+    {
+        @foreach (var oElement in oRespuesta.Data)
+        {
+            <tr>
+                <td>@oElement.Id</td>
+                <td>@oElement.Nombre</td>
+                <td>@oElement.Apellido</td>
+                <td>@oElement.Edad</td>
+                <td>
+                    <a href="/personaform/@oElement.Id">Editar</a>
+                    <a href="/eliminarpersona/@oElement.Id">Eliminar</a>
+                </td>
+            </tr>
+        }
+    }
+</table>
+
+
+@code {
+        public string Url = "/api/Persona";
+        public Respuesta<List<Persona>> oRespuesta = new Respuesta<List<Persona>>();
+
+        protected override async Task OnInitializedAsync() =>
+        oRespuesta = await Http.GetFromJsonAsync<Respuesta<List<Persona>>>(Url);
+}
